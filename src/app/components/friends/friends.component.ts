@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { Friend, User, UserService } from 'src/app/services/user.service';
 
@@ -37,8 +37,7 @@ export class FriendsComponent {
   }
 
   async addFriend(userId: string) {
-    const { id, name } = await this.userService.find(userId).pipe(take(1)).toPromise();
-    const friend = { id, name };
+    const friend = await this.userService.getDetails(userId);
 
     this.user.friends.push(friend);
     this.userService.update(this.user);

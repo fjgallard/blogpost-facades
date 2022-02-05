@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { take } from 'rxjs/operators';
 
 export interface User {
   id: string;
@@ -33,5 +34,10 @@ export class UserService {
 
   delete(id: string) {
     return this.firestore.doc<User>(`users/${id}`).delete();
+  }
+
+  async getDetails(userId: string) {
+    const { id, name } = await this.find(userId).pipe(take(1)).toPromise();
+    return { id, name };
   }
 }

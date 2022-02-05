@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
 import { Friend, User, UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -18,10 +18,14 @@ export class FriendsComponent {
   friends: Friend[] = [];
 
   constructor(
-    private auth: AngularFireAuth,
+    private authService: AuthService,
     private userService: UserService
   ) {
-    this.auth.onAuthStateChanged((user: any) => {
+    this.authService.$user.subscribe(user => {
+      if (!user) {
+        return;
+      }
+
       this.$userId.next(user?.id);
     });
 
